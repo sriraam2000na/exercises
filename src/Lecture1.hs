@@ -39,11 +39,11 @@ module Lecture1
 its behaviour, possible types for the function arguments and write the
 type signature explicitly.
 -}
+makeSnippet :: Int -> [Char] -> [Char]
 makeSnippet limit text = take limit ("Description: " ++ text) ++ "..."
 
 {- | Implement a function that takes two numbers and finds sum of
 their squares.
-
 >>> sumOfSquares 3 4
 25
 
@@ -53,8 +53,13 @@ their squares.
 Explanation: @sumOfSquares 3 4@ should be equal to @9 + 16@ and this
 is 25.
 -}
+sumOfSquares :: Int -> Int -> Int
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-sumOfSquares x y = error "TODO!"
+sumOfSquares x y = sq x + sq y
+        where 
+        sq :: Int -> Int
+        sq num = num * num
+
 
 {- | Implement a function that returns the last digit of a given number.
 
@@ -67,7 +72,8 @@ sumOfSquares x y = error "TODO!"
 
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-lastDigit n = error "lastDigit: Not implemented!"
+lastDigit :: Integer -> Integer
+lastDigit n = mod (abs n) 10
 
 {- | Write a function that takes three numbers and returns the
 difference between the biggest number and the smallest one.
@@ -81,7 +87,13 @@ and 1 is the smallest, and 7 - 1 = 6.
 Try to use local variables (either let-in or where) to implement this
 function.
 -}
-minmax x y z = error "TODO"
+minmax :: Integer -> Integer -> Integer -> Integer
+minmax x y z = 
+    let mx2 = max x y
+        mx = max mx2 z
+        mn2 = min x y
+        mn = min mn2 z
+    in mx - mn
 
 {- | Implement a function that takes a string, start and end positions
 and returns a substring of a given string from the start position to
@@ -98,7 +110,21 @@ start position can be considered as zero (e.g. substring from the
 first character) and negative end position should result in an empty
 string.
 -}
-subString start end str = error "TODO"
+go :: Integer -> Integer -> [Char] -> [Char]
+go start end str = 
+    if end < start || end < 0 then
+        []
+    else
+        if start > 0 then
+            go (start-1) (end-1) (tail str)
+        else 
+            if end < 0 then
+                []
+            else
+                head str : go (start-1) (end-1) (tail str)
+
+subString :: Integer -> Integer -> [Char] -> [Char]
+subString start end str = go start end str
 
 {- | Write a function that takes a String — space separated numbers,
 and finds a sum of the numbers inside this string.
@@ -108,7 +134,12 @@ and finds a sum of the numbers inside this string.
 
 The string contains only spaces and/or numbers.
 -}
-strSum str = error "TODO"
+strSum :: [Char] -> Integer
+strSum str = 
+            let w = words str
+                x = read (head w) :: Integer
+                remain = unwords (tail w)
+            in x + strSum remain
 
 {- | Write a function that takes a number and a list of numbers and
 returns a string, saying how many elements of the list are strictly
